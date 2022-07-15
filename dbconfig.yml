@@ -1,0 +1,6 @@
+development:
+  dialect: postgres
+  datasource: dbname=go-testing sslmode=disable user=postgres password=postgres
+  dir: migrations/postgres
+  table: migrations 
+

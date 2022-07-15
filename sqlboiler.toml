@@ -1,0 +1,15 @@
+output   = "models"
+wipe     = true
+no-tests = true
+add-enum-types = true
+tag-ignore = ["users.password_hash"]
+
+[psql]
+  dbname = "go-testing"
+  host   = "localhost"
+  port   = 5432
+  user   = "postgres"
+  pass   = "postgres"
+  # schema = "schema"
+	sslmode = "disable"
+  # blacklist = ["migrations", "other"]
