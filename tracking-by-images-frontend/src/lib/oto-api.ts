@@ -256,7 +256,7 @@ export class UserService {
 				
 				  
 					  
-						  this.tracker = new models.Tracker(data.tracker);
+						  this.tracker = new Tracker(data.tracker);
 					  
 				  
 				
@@ -270,7 +270,7 @@ export class UserService {
 			}
 		}
 	
-			tracker?: models.Tracker;
+			tracker?: Tracker;
 	
 		// Error is string explaining what went wrong. Empty if everything was fine.
 	error: string = stringDefault;
@@ -313,7 +313,7 @@ export class UserService {
 				
 				  
 					  
-						  this.user = new models.User(data.user);
+						  this.user = new User(data.user);
 					  
 				  
 				
@@ -327,7 +327,7 @@ export class UserService {
 			}
 		}
 	
-			user?: models.User;
+			user?: User;
 	
 		// Error is string explaining what went wrong. Empty if everything was fine.
 	error: string = stringDefault;
@@ -418,7 +418,7 @@ export class UserService {
 				
 				  
 					  
-						  this.user = new models.User(data.user);
+						  this.user = new User(data.user);
 					  
 				  
 				
@@ -432,7 +432,7 @@ export class UserService {
 			}
 		}
 	
-			user?: models.User;
+			user?: User;
 	
 		// Error is string explaining what went wrong. Empty if everything was fine.
 	error: string = stringDefault;
@@ -492,9 +492,9 @@ export class UserService {
 	
 			is_active: boolean = booleanDefault;
 	
-			-?: models.trackerR;
+
 	
-			-?: models.trackerL;
+
 	
 	}
   
@@ -534,7 +534,7 @@ export class UserService {
 				
 				  
 					  
-						  this.tracker = new models.Tracker(data.tracker);
+						  this.tracker = new Tracker(data.tracker);
 					  
 				  
 				
@@ -548,7 +548,7 @@ export class UserService {
 			}
 		}
 	
-			tracker?: models.Tracker;
+			tracker?: Tracker;
 	
 		// Error is string explaining what went wrong. Empty if everything was fine.
 	error: string = stringDefault;
@@ -586,75 +586,25 @@ export class UserService {
 	
 			email: string = stringDefault;
 	
-			-: string = stringDefault;
+
 	
-			-?: models.userR;
+
 	
-			-?: models.userL;
+
 	
 	}
   
 
   
-	export class trackerL {
-		constructor(data?: any) {
-			if (data) {
-			
-			}
-		}
-	
-	}
   
 
   
-	export class trackerR {
-		constructor(data?: any) {
-			if (data) {
-			
-				
-				  
-					  
-						  this.Owner = new models.User(data.Owner);
-					  
-				  
-				
-			
-			}
-		}
-	
-			Owner?: models.User;
-	
-	}
   
 
   
-	export class userL {
-		constructor(data?: any) {
-			if (data) {
-			
-			}
-		}
-	
-	}
   
 
   
-	export class userR {
-		constructor(data?: any) {
-			if (data) {
-			
-				
-				  
-				  this.OwnerTrackers = data.OwnerTrackers;
-				  
-				
-			
-			}
-		}
-	
-			OwnerTrackers: models.TrackerSlice = models.TrackerSliceDefault;
-	
-	}
   
 
 
