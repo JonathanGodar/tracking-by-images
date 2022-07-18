@@ -6,8 +6,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
-	"strings"
 
 	"github.com/JonathanGodar/go-web-gin/client/api"
 	"github.com/spf13/cobra"
@@ -25,9 +23,6 @@ var authCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		email := args[0]
 		password := args[1]
-		client := api.New(serverURL + "oto/")
-
-		userService := api.NewUserService(client)
 
 		resp, err := userService.GetAccessToken(context.Background(),
 			api.GetAccessTokenRequest{

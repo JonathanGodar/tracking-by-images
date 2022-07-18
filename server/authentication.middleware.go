@@ -61,7 +61,12 @@ func authenticationMiddleware(next http.Handler) http.Handler {
 func getAuthToken(r *http.Request) (string, bool) {
 	authHeaders, authHeaderExists := r.Header["Authorization"]
 
+	if !authHeaderExists {
+		return "", false
+	}
+
 	if len(authHeaders) != 1 {
+		log.Println("No headers")
 		return "", false
 	}
 

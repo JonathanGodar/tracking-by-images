@@ -86,6 +86,7 @@ func (s userService) GetMe(ctx context.Context, _ interface{}) (*myoto.GetMeResp
 	user, ok := ctx.Value(SignedInUserKey).(models.User)
 
 	if !ok {
+		s.logger.Debug("Non authenticated user tried GetMe")
 		return nil, errors.New("Unauthorized")
 	}
 

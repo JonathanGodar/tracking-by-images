@@ -8,6 +8,7 @@ run-migrations:
 generate-code:
 	oto -pkg myoto -template ./server/myoto/server.go.plush -out ./server/myoto/server.go ./definition
 	oto -pkg api -template ./client/api/oto-client.go.plush -out ./client/api/oto-client.go ./definition
+	oto -template ./tracking-by-images-frontend/src/lib/oto-api.ts.plush -out ./tracking-by-images-frontend/src/lib/oto-api.ts ./definition
 	gofmt -w ./server/myoto/server.go ./server/myoto/server.go
 	gofmt -w ./client/api/oto-client.go ./client/api/oto-client.go
 

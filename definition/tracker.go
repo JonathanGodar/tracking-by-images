@@ -2,6 +2,8 @@ package definition
 
 import "github.com/JonathanGodar/go-web-gin/models"
 
+// type Tracker models.Tracker;
+
 type TrackerService interface {
 	AddTracker(AddTrackerRequest) AddTrackerResponse;
 	UpdateTracker(UpdateTrackerRequest) UpdateTrackerResponse;
@@ -29,7 +31,9 @@ type AddTrackerResponse struct {
 type DeleteTrackerResponse struct {}
 
 // type Tracker struct {
-// 	ID string
-// 	OwnerID string
+// 	ID            string
 // 	TimesAccessed int
+// 	OwnerID       string
+// 	URL           string
+// 	IsActive      bool
 // }

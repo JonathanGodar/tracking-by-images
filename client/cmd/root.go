@@ -6,14 +6,21 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 
+	"github.com/JonathanGodar/go-web-gin/client/api"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
 var serverURL string
+
+// This code is reeeeeallly bad but its just for fun so EH
+var userService *api.UserService 
+var trackerService *api.TrackerService 
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -44,14 +51,31 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	// cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.client.yaml)")
-	rootCmd.PersistentFlags().StringVar(&serverURL, "serverUrl", "http://localhost:8080/", "Which server url should be used")
+	rootCmd.PersistentFlags().StringVar(&serverURL, "serverUrl", "http://localhost:8080", "Which server url should be used")
 	viper.BindPFlag("serverUrl", rootCmd.Flags().Lookup("serverUrl"))
+
+	initConfig()
+
+	println("token:", viper.GetString("accessToken"))
+
+	client := api.New(serverURL + "/oto/")
+	if token := viper.GetString("accessToken"); token != ""{
+		client.BeforeRequest = func(req *http.Request) error {
+			log.Println("Adding header")
+			req.Header.Add("Authorization", "Bearer " + token)
+			return nil
+		}
+	}
+
+
+	trackerService = api.NewTrackerService(client)
+	userService = api.NewUserService(client)
 }
 
 // initConfig reads in config file and ENV variables if set.

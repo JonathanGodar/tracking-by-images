@@ -33,10 +33,10 @@ func main() {
 	serverAddr := ":8080"
 
 	logger.Debug("Binding TrackerHandler")
-	http.Handle("/tracker/", trackerHandler(db, logger))
+	http.Handle("/tracker/", CORSMiddleware(trackerHandler(db, logger)))
 
 	logger.Debug("Binding Oto endpoint")
-	http.Handle("/oto/", authenticationMiddleware(otoServer))
+	http.Handle("/oto/", CORSMiddleware(authenticationMiddleware(otoServer)))
 
 	logger.Info("Starting server listen", zap.String("address", serverAddr))
 	logger.Fatal("Server exited", zap.Error(http.ListenAndServe(":8080", nil)))

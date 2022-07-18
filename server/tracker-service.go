@@ -44,6 +44,13 @@ func (s trackerService) AddTracker(ctx context.Context, req myoto.AddTrackerRequ
 	if err != nil {
 		return nil, err
 	}
+	
+	// trackerResp := myoto.Tracker {
+	// 	ID: tracker.ID,
+	// 	TimesAccessed: tracker.TimesAccessed,
+	// 	OwnerID: tracker.OwnerID,
+	// 	URL: tracker.URL,
+	// }
 
 	return &myoto.AddTrackerResponse{
 		Tracker: *tracker,

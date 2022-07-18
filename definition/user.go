@@ -2,6 +2,9 @@ package definition
 
 import "github.com/JonathanGodar/go-web-gin/models"
 
+
+// type User models.User;
+
 type UserService interface {
 	AddUser(AddUserRequest) AddUserResponse
 	GetAccessToken(GetAccessTokenRequest) GetAccessTokenResponse
@@ -29,3 +32,8 @@ type GetAccessTokenRequest struct {
 type GetAccessTokenResponse struct {
 	Token string
 }
+
+// type User struct {
+// 	ID string
+// 	Email string
+// }
