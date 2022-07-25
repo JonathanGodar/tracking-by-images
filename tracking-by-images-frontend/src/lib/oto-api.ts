@@ -41,9 +41,11 @@ export class TrackerService {
 			headers: headers,
 			body: JSON.stringify(addTrackerRequest),
 		})
-		if (response.status !== 200) {
-			throw new Error(`TrackerService.AddTracker: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`TrackerService.AddTracker: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
@@ -73,9 +75,11 @@ export class TrackerService {
 			headers: headers,
 			body: JSON.stringify(string),
 		})
-		if (response.status !== 200) {
-			throw new Error(`TrackerService.DeleteTracker: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`TrackerService.DeleteTracker: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
@@ -105,9 +109,11 @@ export class TrackerService {
 			headers: headers,
 			body: JSON.stringify(updateTrackerRequest),
 		})
-		if (response.status !== 200) {
-			throw new Error(`TrackerService.UpdateTracker: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`TrackerService.UpdateTracker: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
@@ -142,9 +148,11 @@ export class UserService {
 			headers: headers,
 			body: JSON.stringify(addUserRequest),
 		})
-		if (response.status !== 200) {
-			throw new Error(`UserService.AddUser: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`UserService.AddUser: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
@@ -174,9 +182,11 @@ export class UserService {
 			headers: headers,
 			body: JSON.stringify(getAccessTokenRequest),
 		})
-		if (response.status !== 200) {
-			throw new Error(`UserService.GetAccessToken: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`UserService.GetAccessToken: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
@@ -206,14 +216,51 @@ export class UserService {
 			headers: headers,
 			body: JSON.stringify(object),
 		})
-		if (response.status !== 200) {
-			throw new Error(`UserService.GetMe: ${response.status} ${response.statusText}`);
-		}
+
+		//if (response.status !== 200) {
+		//	throw new Error(`UserService.GetMe: ${response.status} ${response.statusText}`);
+		// }
+
 		return response.json().then((json) => {
 			if (json.error) {
 				throw new Error(json.error);
 			}
 			return new GetMeResponse(json);
+		})
+	}
+	
+	// GetTrackersOf() GetMeResponse
+	async getMyTrackers(object?: object, modifyHeaders?: HeadersFunc): Promise<GetMyTrackersResponse> {
+		if (object == null) {
+			
+				object = {}; 
+			
+		}
+
+		const headers: Headers = new Headers();
+		headers.set('Accept', 'application/json');
+		headers.set('Content-Type', 'application/json');
+		if (this.client.headers) {
+			await this.client.headers(headers);
+		}
+		if (modifyHeaders) {
+			await modifyHeaders(headers)
+		}
+		const response = await fetch(this.client.basepath + 'UserService.GetMyTrackers', {
+			method: 'POST',
+			headers: headers,
+			body: JSON.stringify(object),
+		})
+
+		//if (response.status !== 200) {
+		//	throw new Error(`UserService.GetMyTrackers: ${response.status} ${response.statusText}`);
+		// }
+
+		return response.json().then((json) => {
+			if (json.error) {
+				throw new Error(json.error);
+			}
+			return new GetMyTrackersResponse(json);
 		})
 	}
 	
@@ -433,6 +480,41 @@ export class UserService {
 		}
 	
 			user?: User;
+	
+		// Error is string explaining what went wrong. Empty if everything was fine.
+	error: string = stringDefault;
+	
+	}
+  
+
+  
+	export class GetMyTrackersResponse {
+		constructor(data?: any) {
+			if (data) {
+			
+				
+				  
+					  
+						  if (data.trackers) {
+							  this.trackers = []
+							  for (let i = 0; i < data.trackers.length; i++) {
+								  this.trackers.push(new Tracker(data.trackers[i]));
+							  }
+						  }
+					  
+				  
+				
+			
+				
+				  
+				  this.error = data.error;
+				  
+				
+			
+			}
+		}
+	
+			trackers?: Tracker[];
 	
 		// Error is string explaining what went wrong. Empty if everything was fine.
 	error: string = stringDefault;

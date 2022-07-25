@@ -8,6 +8,7 @@ import (
 
 	"github.com/JonathanGodar/go-web-gin/models"
 	"github.com/JonathanGodar/go-web-gin/server/myoto"
+	"github.com/JonathanGodar/go-web-gin/server/util"
 	"github.com/golang-jwt/jwt"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
@@ -79,6 +80,30 @@ func (s userService) GetAccessToken(ctx context.Context, req myoto.GetAccessToke
 
 	return &myoto.GetAccessTokenResponse{
 		Token: tokenString,
+	}, nil
+}
+
+func (s userService) GetMyTrackers(ctx context.Context, _ interface{}) (*myoto.GetMyTrackersResponse, error) {
+	user, ok := ctx.Value(SignedInUserKey).(models.User)
+	if !ok {
+		return nil, errors.New("Not signed in")
+	}
+
+	trackerPtrs, err := models.Trackers(
+		qm.Where( models.TrackerColumns.OwnerID + " = ?", user.ID,
+	)).All(ctx, s.db)
+
+	if err != nil {
+		return nil, err;
+	}
+
+	trackers := util.PtrSliceToValueSlice(trackerPtrs)
+
+	
+
+
+	return &myoto.GetMyTrackersResponse {
+		Trackers: trackers,
 	}, nil
 }
 

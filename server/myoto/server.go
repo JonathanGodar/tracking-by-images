@@ -21,6 +21,8 @@ type UserService interface {
 	AddUser(context.Context, AddUserRequest) (*AddUserResponse, error)
 	GetAccessToken(context.Context, GetAccessTokenRequest) (*GetAccessTokenResponse, error)
 	GetMe(context.Context, interface{}) (*GetMeResponse, error)
+	// GetTrackersOf() GetMeResponse
+	GetMyTrackers(context.Context, interface{}) (*GetMyTrackersResponse, error)
 }
 
 type trackerServiceServer struct {
@@ -104,6 +106,7 @@ func RegisterUserService(server *otohttp.Server, userService UserService) {
 	server.Register("UserService", "AddUser", handler.handleAddUser)
 	server.Register("UserService", "GetAccessToken", handler.handleGetAccessToken)
 	server.Register("UserService", "GetMe", handler.handleGetMe)
+	server.Register("UserService", "GetMyTrackers", handler.handleGetMyTrackers)
 }
 
 func (s *userServiceServer) handleAddUser(w http.ResponseWriter, r *http.Request) {
@@ -147,6 +150,23 @@ func (s *userServiceServer) handleGetMe(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	response, err := s.userService.GetMe(r.Context(), request)
+	if err != nil {
+		s.server.OnErr(w, r, err)
+		return
+	}
+	if err := otohttp.Encode(w, r, http.StatusOK, response); err != nil {
+		s.server.OnErr(w, r, err)
+		return
+	}
+}
+
+func (s *userServiceServer) handleGetMyTrackers(w http.ResponseWriter, r *http.Request) {
+	var request interface{}
+	if err := otohttp.Decode(r, &request); err != nil {
+		s.server.OnErr(w, r, err)
+		return
+	}
+	response, err := s.userService.GetMyTrackers(r.Context(), request)
 	if err != nil {
 		s.server.OnErr(w, r, err)
 		return
@@ -204,6 +224,13 @@ type GetAccessTokenResponse struct {
 
 type GetMeResponse struct {
 	User models.User `json:"user"`
+
+	// Error is string explaining what went wrong. Empty if everything was fine.
+	Error string `json:"error,omitempty"`
+}
+
+type GetMyTrackersResponse struct {
+	Trackers []models.Tracker `json:"trackers"`
 
 	// Error is string explaining what went wrong. Empty if everything was fine.
 	Error string `json:"error,omitempty"`

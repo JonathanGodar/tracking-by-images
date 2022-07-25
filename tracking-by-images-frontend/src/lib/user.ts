@@ -1,6 +1,6 @@
 import { server } from "$app/env";
 import { writable } from "svelte/store";
-import { GetClient } from "./api";
+import { GetClient, GetUserService } from "./api";
 
 const JWTStorageKey = "jwt";
 
@@ -19,7 +19,29 @@ function GetIsLoggedIn() {
 }
 
 
-export function SetAccessToken(token: string){
+
+export async function Login(email: string, password: string): Promise<Error | undefined> {
+	try {
+		let resp = await GetUserService().getAccessToken({
+				email,
+				password,
+		});
+
+		SetAccessToken(resp.token);
+		return undefined;
+	} catch(error: unknown){
+		console.log(error);
+		if(error instanceof Error) {
+			return error;
+		}
+		throw error;
+	}
+
+
+}
+
+
+function SetAccessToken(token: string){
 	localStorage.setItem(JWTStorageKey, token);
 
 

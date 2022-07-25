@@ -1,23 +1,11 @@
-<script>
-import Nav from "$lib/components/nav.svelte";
-
-</script>
-
-<Nav></Nav>
-
-<div class="content">
-	<slot></slot>
-</div>
-
-
+<slot></slot>
 
 <style global>
-* {
+html {
 	background-color: #395B64;
 	color: #E7F6F2;
 	padding: 0;
 	margin: 0;
-
 }
 
 .content {
@@ -28,6 +16,4 @@ a {
 	color: #A5C9CA;
 	text-decoration: none;
 }
-
-
 </style>

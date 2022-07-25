@@ -1,7 +1,7 @@
 <script lang="ts">
 
 import { GetUserService } from "$lib/api";
-import { IsLoggedIn, SetAccessToken } from "$lib/user";
+import { IsLoggedIn, Login } from "$lib/user";
 
 /* let loggedIn = IsLoggedIn(); */
 
@@ -20,17 +20,10 @@ const handleSignup = async () => {
 		return;
 	}
 
-	let resp = await GetUserService().getAccessToken({
-			email,
-			password,
-	});
-
-	if(resp.error){
-		alert(resp.error);
+	let signinErr = await Login(email, password);
+	if(signinErr != undefined){
+		alert(signinErr.message);
 	}
-
-
-	SetAccessToken(resp.token);
 }
 </script>
 
@@ -60,20 +53,5 @@ form * {
 	border-radius: 5rem; 
 
 }
-
-
-
-/* input[type=text] { */
-/*   width: 100%; */
-/*   padding: 0.5rem 1.5rem; */
-/*   margin: 8px 0; */
-/*   box-sizing: border-box; */
-
-/* 	border-color: black; */
-/* 	color: orange; */
-/* 	border-style: solid; */
-/* 	border-radius: 5rem; */ 
-/* } */
-
 </style>
 

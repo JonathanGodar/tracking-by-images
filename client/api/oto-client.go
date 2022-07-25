@@ -401,6 +401,63 @@ func (s *UserService) GetMe(ctx context.Context, r interface{}) (*GetMeResponse,
 	return &response.GetMeResponse, nil
 }
 
+// GetTrackersOf() GetMeResponse
+func (s *UserService) GetMyTrackers(ctx context.Context, r interface{}) (*GetMyTrackersResponse, error) {
+	requestBodyBytes, err := json.Marshal(r)
+	if err != nil {
+		return nil, errors.Wrap(err, "UserService.GetMyTrackers: marshal interface{}")
+	}
+	url := s.client.RemoteHost + "UserService.GetMyTrackers"
+	s.client.Debug(fmt.Sprintf("POST %s", url))
+	s.client.Debug(fmt.Sprintf(">> %s", string(requestBodyBytes)))
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(requestBodyBytes))
+	if err != nil {
+		return nil, errors.Wrap(err, "UserService.GetMyTrackers: NewRequest")
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept-Encoding", "gzip")
+	req = req.WithContext(ctx)
+	if s.client.BeforeRequest != nil {
+		err = s.client.BeforeRequest(req)
+		if err != nil {
+			// don't wrap this error, it belongs to the user
+			return nil, err
+		}
+	}
+	resp, err := s.client.HTTPClient.Do(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "UserService.GetMyTrackers")
+	}
+	defer resp.Body.Close()
+	var response struct {
+		GetMyTrackersResponse
+		Error string
+	}
+	var bodyReader io.Reader = resp.Body
+	if strings.Contains(resp.Header.Get("Content-Encoding"), "gzip") {
+		decodedBody, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "UserService.GetMyTrackers: new gzip reader")
+		}
+		defer decodedBody.Close()
+		bodyReader = decodedBody
+	}
+	respBodyBytes, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, errors.Wrap(err, "UserService.GetMyTrackers: read response body")
+	}
+	if err := json.Unmarshal(respBodyBytes, &response); err != nil {
+		if resp.StatusCode != http.StatusOK {
+			return nil, errors.Errorf("UserService.GetMyTrackers: (%d) %v", resp.StatusCode, string(respBodyBytes))
+		}
+		return nil, err
+	}
+	if response.Error != "" {
+		return nil, errors.New(response.Error)
+	}
+	return &response.GetMyTrackersResponse, nil
+}
+
 type AddTrackerRequest struct {
 	OwnerID string `json:"ownerID"`
 
@@ -436,6 +493,10 @@ type GetAccessTokenResponse struct {
 
 type GetMeResponse struct {
 	User models.User `json:"user"`
+}
+
+type GetMyTrackersResponse struct {
+	Trackers []models.Tracker `json:"trackers"`
 }
 
 type UpdateTrackerRequest struct {
